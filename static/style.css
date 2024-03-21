@@ -61,7 +61,7 @@ form {
 
 /* Estilização do botão de envio */
 button {
-    background: linear-gradient(145deg, #6f4e37 0%, #d1a67d 100%);
+    background: linear-gradient(135deg, #008004 0%, #8ef492 100%);
     color: white;
     padding: 15px 20px;
     border: none;
@@ -191,7 +191,16 @@ input[type="radio"]:checked::after {
 /* Garantir que o texto esteja sempre visível, por cima do radio button */
 .options label span {
     position: relative;
-    z-index: 1;
     color: #fff;
     margin-left: 20px;
+}
+
+#qr-shaded-region {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+video {
+    border-radius: 20px;
 }

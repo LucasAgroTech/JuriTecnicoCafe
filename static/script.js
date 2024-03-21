@@ -54,3 +54,4 @@ function updateValue(inputId, valueId) {
       document.getElementById('qrCodeModal').style.display = "none";
     }
   });
+  
