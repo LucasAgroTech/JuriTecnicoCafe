@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DTEC - JÚRI TÉCNICO - PBA CAFÉ</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="static/script.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register('{{ url_for("static", filename="service-worker.js") }}')
+            .then(
+              function (registration) {
+                // Registro do Service Worker bem-sucedido
+              },
+              function (err) {
+                // Falha no registro do Service Worker
+              }
+            );
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Modal para o leitor de QR Code -->
+    <div
+      id="qrCodeModal"
+      style="
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      "
+    >
+      <div
+        style="
+          background-color: #fefefe;
+          margin: 15% auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+        "
+      >
+        <span
+          id="closeModal"
+          style="color: #aaa; float: right; font-size: 28px; font-weight: bold"
+          >&times;</span
+        >
+        <div id="reader" style="width: auto; height: auto"></div>
+      </div>
+    </div>
+
+    <form id="Form">
+      <div
+        style="
+          background-image: url('static/header.svg');
+          height: 200px;
+          background-size: cover;
+          background-position: center;
+          border-radius: 10px 10px 0 0;
+        "
+      ></div>
+      <div
+        style="
+          background-image: linear-gradient(to right, #120a07, #d1a67d);
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          margin-left: 14px;
+          margin-top: 40px;
+          margin-bottom: 20px;
+          border-radius: 5px 0 0 5px;
+          color: #fff;
+        "
+      >
+        <i
+          class="fas fa-coffee"
+          style="margin-right: 10px; font-size: 16px"
+        ></i>
+        <h1 style="margin: 0; font-size: 16px">Café a ser avaliado</h1>
+      </div>
+      <div
+        class="form-group"
+        style="display: flex; justify-content: space-between"
+      >
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            margin-right: 10px;
+          "
+        >
+          <label for="nome" style="margin-bottom: 5px">Especialista</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px"
+          />
+        </div>
+        <div style="display: flex; flex-direction: column; flex: 1">
+          <label for="data" style="margin-bottom: 5px">Data</label>
+          <input
+            type="date"
+            id="data"
+            name="data"
+            style="padding: 9px; border: 1px solid #ccc; border-radius: 4px"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="codigoCafe">Café</label>
+        <div style="display: flex">
+          <input
+            type="text"
+            id="codigoCafe"
+            name="codigoCafe"
+            style="margin: 0; margin-right: 8px"
+          />
+          <button
+            id="scanBtn"
+            type="button"
+            style="
+              margin: 0;
+              border-radius: 5px;
+              border: 1px solid #ccc;
+              width: 42px;
+              height: 42px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 15px;
+              background: linear-gradient(135deg, #6f4e37 0%, #d1a67d 100%);
+              transition: all 0.3s ease;
+            "
+          >
+            <img
+              src="{{ url_for('static', filename='varredura-qr.png') }}"
+              alt="Scan"
+              style="width: 30px; height: auto"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style="
+          background-image: linear-gradient(to right, #120a07, #d1a67d);
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          margin-left: 14px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+          border-radius: 5px 0 0 5px;
+          color: #fff;
+        "
+      >
+        <i
+          class="fas fa-thumbs-up"
+          style="margin-right: 10px; font-size: 16px"
+        ></i>
+        <h1 style="margin: 0; font-size: 16px">Avaliação</h1>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 40px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="fragrancia" style="flex: 1">
+            Fragrância do pó
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 6,6)</span
+            >
+          </label>
+          <span
+            id="valorFragrancia"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+
+        <input
+          type="range"
+          id="fragrancia"
+          name="fragrancia"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('fragrancia', 'valorFragrancia')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Fraco, pouco intenso</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Forte, muito intenso</span
+          >
+        </div>
+      </div>
+      <div class="form-group">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="aroma" style="flex: 1">
+            Aroma/Sabor
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 6,8)</span
+            >
+          </label>
+          <span
+            id="valorAroma"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="aroma"
+          name="aroma"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('aroma', 'valorAroma')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco complexo, muitos defeitos</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito complexo, bebida limpa</span
+          >
+        </div>
+      </div>
+      <div
+        style="
+          background-image: linear-gradient(to right, #120a07, #d1a67d);
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          margin-left: 14px;
+          margin-top: 20px;
+          margin-bottom: 20px;
+          border-radius: 5px 0 0 5px;
+          color: #fff;
+        "
+      >
+        <i class="fas fa-heart" style="margin-right: 10px; font-size: 16px"></i>
+        <h1 style="margin: 0; font-size: 16px">Aromas e sabores percebidos</h1>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Alcoólico</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="alcoholic" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="alcoholic" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="alcoholic" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="alcoholic" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="alcoholic" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Amadeirado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="woody" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="woody" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="woody" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="woody" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="woody" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Amendoado/Castanha</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="almond" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="almond" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="almond" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="almond" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="almond" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Animálico</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="animalic" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="animalic" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="animalic" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="animalic" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="animalic" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+      <div class="descriptor" style="margin: 20px">
+        <span>Azedo</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="sour" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="sour" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="sour" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="sour" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="sour" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+      <div class="descriptor" style="margin: 20px">
+        <span>Baunilha</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="vanilla" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vanilla" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vanilla" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vanilla" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vanilla" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Borracha</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="rubber" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="rubber" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="rubber" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="rubber" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="rubber" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Caramelizado/Caramelo/Doce</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="caramelized" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="caramelized" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="caramelized" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="caramelized" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="caramelized" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Cereal</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="cereal" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="cereal" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="cereal" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="cereal" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="cereal" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Chocolate/Cacau</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="chocolate" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chocolate" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chocolate" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chocolate" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chocolate" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+      <div class="descriptor" style="margin: 20px">
+        <span>Cozido/Assado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="baked" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="baked" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="baked" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="baked" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="baked" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Especiarias</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="spices" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="spices" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="spices" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="spices" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="spices" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Fermentado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="fermented" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="fermented" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="fermented" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="fermented" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="fermented" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Floral</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="floral" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="floral" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="floral" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="floral" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="floral" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Frutado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="fruity" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="fruity" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="fruity" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="fruity" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="fruity" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Iodofórmio/Químico</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="chemical" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chemical" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chemical" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chemical" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="chemical" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Madeira/Papelão</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="woody_cardboard" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="woody_cardboard" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="woody_cardboard" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="woody_cardboard" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="woody_cardboard" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Mel</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="honey" value="0" /><span>0</span></label
+          >
+          <label
+            ><input type="radio" name="honey" value="1" /><span>1</span></label
+          >
+          <label
+            ><input type="radio" name="honey" value="2" /><span>2</span></label
+          >
+          <label
+            ><input type="radio" name="honey" value="3" /><span>3</span></label
+          >
+          <label
+            ><input type="radio" name="honey" value="4" /><span>4</span></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Queimado/Defumado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="burnt_smoked" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="burnt_smoked" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="burnt_smoked" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="burnt_smoked" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="burnt_smoked" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Terroso/Mofo</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="earthy_moldy" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="earthy_moldy" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="earthy_moldy" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="earthy_moldy" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="earthy_moldy" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Tostado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="toasted" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="toasted" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="toasted" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="toasted" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="toasted" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+      <div class="descriptor" style="margin: 20px">
+        <span>Vegetal</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="vegetal" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vegetal" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vegetal" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vegetal" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="vegetal" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Envelhecido/Oxidado</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="aged_oxidized" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="aged_oxidized" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="aged_oxidized" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="aged_oxidized" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="aged_oxidized" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+
+      <div class="descriptor" style="margin: 20px">
+        <span>Verde/Herbáceo</span>
+        <div class="options">
+          <label
+            ><input type="radio" name="green_herbal" value="0" /><span
+              >0</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="green_herbal" value="1" /><span
+              >1</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="green_herbal" value="2" /><span
+              >2</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="green_herbal" value="3" /><span
+              >3</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="green_herbal" value="4" /><span
+              >4</span
+            ></label
+          >
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 40px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="docura" style="flex: 1">
+            Doçura
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 4,6)</span
+            >
+          </label>
+          <span
+            id="valorDocura"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="docura"
+          name="docura"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('docura', 'valorDocura')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco doce</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito doce</span
+          >
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="corpo" style="flex: 1">
+            Corpo
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 5,9)</span
+            >
+          </label>
+          <span
+            id="valorCorpo"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="corpo"
+          name="corpo"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('corpo', 'valorCorpo')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco corpo, ralo, áspero</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito corpo, espesso, aveludado</span
+          >
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="acidez" style="flex: 1">
+            Acidez - intensidade
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 4,8)</span
+            >
+          </label>
+          <span
+            id="valorAcidez"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="acidez"
+          name="acidez"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('acidez', 'valorAcidez')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco ácido, imperceptível</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito ácido, intenso
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="acidezqualidade" style="flex: 1">
+            Acidez - qualidade
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 4,8)</span
+            >
+          </label>
+          <span
+            id="valorAcidezqualidade"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="acidezqualidade"
+          name="acidezqualidade"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('acidezqualidade', 'valorAcidezqualidade')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouca qualidade, azedo</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muita qualidade, limpo
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="amargor" style="flex: 1">
+            Amargor
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 4,2)</span
+            >
+          </label>
+          <span
+            id="valorAmargor"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="amargor"
+          name="amargor"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('amargor', 'valorAmargor')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco amargo, imperceptível</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito amargo, intenso
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="adstringencia" style="flex: 1">
+            Adstringência
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 4,0)</span
+            >
+          </label>
+          <span
+            id="valorAdstringencia"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="adstringencia"
+          name="adstringencia"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('adstringencia', 'valorAdstringencia')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouca adstringência</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muita adstringência
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="defeitos" style="flex: 1">
+            Defeitos
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 3,2)</span
+            >
+          </label>
+          <span
+            id="valorDefeitos"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="defeitos"
+          name="defeitos"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('defeitos', 'valorDefeitos')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="saborresidual" style="flex: 1">
+            Sabor Residual
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 6,8)</span
+            >
+          </label>
+          <span
+            id="valorSaborresidual"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="saborresidual"
+          name="saborresidual"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('saborresidual', 'valorSaborresidual')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouca adstringência</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muita adstringência
+          </span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          "
+        >
+          <label for="intensidade" style="flex: 1">
+            Intensidade
+            <span style="font-size: smaller; color: #999; margin-left: 5px"
+              >(nota referência: 6,1)</span
+            >
+          </label>
+          <span
+            id="valorIntensidade"
+            style="
+              width: 50px;
+              text-align: right;
+              font-weight: 700;
+              color: #008004;
+            "
+            >5</span
+          >
+        </div>
+        <input
+          type="range"
+          id="intensidade"
+          name="intensidade"
+          min="1"
+          max="9"
+          step="0.1"
+          oninput="updateValue('intensidade', 'valorIntensidade')"
+        />
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5px"
+        >
+          <span style="text-align: left; font-size: smaller; color: #333"
+            >Pouco intenso</span
+          >
+          <span style="text-align: right; font-size: smaller; color: #333"
+            >Muito intenso
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Comentários</label>
+        <textarea rows="4" style="width: 100%"></textarea>
+      </div>
+      <button type="submit">Enviar</button>
+    </form>
+    <script>
+      // Seu script JavaScript
+      document.addEventListener("DOMContentLoaded", function () {
+        const nomeSalvo = localStorage.getItem("nome");
+        if (nomeSalvo) {
+          document.getElementById("nome").value = nomeSalvo;
+        }
+
+        const agora = new Date();
+        const dataFormatada = agora.toISOString().split("T")[0];
+        document.getElementById("data").value = dataFormatada;
+      });
+
+      document.getElementById("Form").addEventListener("submit", function () {
+        const nome = document.getElementById("nome").value;
+        localStorage.setItem("nome", nome);
+      });
+    </script>
+  </body>
+</html>
