@@ -126,12 +126,24 @@
           "
         >
           <label for="nome" style="margin-bottom: 5px">Especialista</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px"
-          />
+          <select
+          id="nome"
+          name="nome"
+          style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%;"
+          {% if nome_completo %} disabled {% endif %}
+        >
+          <option value="">Selecione seu nome...</option>
+          <option value="Aline de Oliveira" {% if nome_completo == "Aline de Oliveira" %} selected {% endif %}>Aline de Oliveira</option>
+          <option value="Camila Arcanjo" {% if nome_completo == "Camila Arcanjo" %} selected {% endif %}>Camila Arcanjo</option>
+          <option value="Cicera Pauliane" {% if nome_completo == "Cicera Pauliane" %} selected {% endif %}>Cicera Pauliane</option>
+          <option value="Eliana Relvas" {% if nome_completo == "Eliana Relvas" %} selected {% endif %}>Eliana Relvas</option>
+          <option value="Ensei Uejo Neto" {% if nome_completo == "Ensei Uejo Neto" %} selected {% endif %}>Ensei Uejo Neto</option>
+          <option value="Everton Tales" {% if nome_completo == "Everton Tales" %} selected {% endif %}>Everton Tales</option>
+          <option value="Helga Andrade" {% if nome_completo == "Helga Andrade" %} selected {% endif %}>Helga Andrade</option>
+          <option value="Rebecca Sant'Anna" {% if nome_completo == "Rebecca Sant'Anna" %} selected {% endif %}>Rebecca Sant'Anna</option>
+          <option value="Thiago de Oliveira" {% if nome_completo == "Thiago de Oliveira" %} selected {% endif %}>Thiago de Oliveira</option>
+        </select>
+        
         </div>
         <div style="display: flex; flex-direction: column; flex: 1">
           <label for="data" style="margin-bottom: 5px">Data</label>
@@ -140,6 +152,7 @@
             id="data"
             name="data"
             style="padding: 9px; border: 1px solid #ccc; border-radius: 4px"
+            disabled
           />
         </div>
       </div>
@@ -168,7 +181,6 @@
               padding: 15px;
               background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
               transition: all 0.3s ease;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             "
           >
             <img
@@ -320,27 +332,27 @@
         <span>Alcoólico</span>
         <div class="options">
           <label
-            ><input type="radio" name="alcoholic" value="0" /><span
+            ><input type="radio" name="alcoolico" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="alcoholic" value="1" /><span
+            ><input type="radio" name="alcoolico" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="alcoholic" value="2" /><span
+            ><input type="radio" name="alcoolico" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="alcoholic" value="3" /><span
+            ><input type="radio" name="alcoolico" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="alcoholic" value="4" /><span
+            ><input type="radio" name="alcoolico" value="4" /><span
               >4</span
             ></label
           >
@@ -351,19 +363,19 @@
         <span>Amadeirado</span>
         <div class="options">
           <label
-            ><input type="radio" name="woody" value="0" /><span>0</span></label
+            ><input type="radio" name="amadeirado" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="woody" value="1" /><span>1</span></label
+            ><input type="radio" name="amadeirado" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="woody" value="2" /><span>2</span></label
+            ><input type="radio" name="amadeirado" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="woody" value="3" /><span>3</span></label
+            ><input type="radio" name="amadeirado" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="woody" value="4" /><span>4</span></label
+            ><input type="radio" name="amadeirado" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -372,19 +384,19 @@
         <span>Amendoado/Castanha</span>
         <div class="options">
           <label
-            ><input type="radio" name="almond" value="0" /><span>0</span></label
+            ><input type="radio" name="amendoado_castanha" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="almond" value="1" /><span>1</span></label
+            ><input type="radio" name="amendoado_castanha" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="almond" value="2" /><span>2</span></label
+            ><input type="radio" name="amendoado_castanha" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="almond" value="3" /><span>3</span></label
+            ><input type="radio" name="amendoado_castanha" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="almond" value="4" /><span>4</span></label
+            ><input type="radio" name="amendoado_castanha" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -393,77 +405,79 @@
         <span>Animálico</span>
         <div class="options">
           <label
-            ><input type="radio" name="animalic" value="0" /><span
+            ><input type="radio" name="animalico" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="animalic" value="1" /><span
+            ><input type="radio" name="animalico" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="animalic" value="2" /><span
+            ><input type="radio" name="animalico" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="animalic" value="3" /><span
+            ><input type="radio" name="animalico" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="animalic" value="4" /><span
+            ><input type="radio" name="animalico" value="4" /><span
               >4</span
             ></label
           >
         </div>
       </div>
+
       <div class="descriptor" style="margin: 20px">
         <span>Azedo</span>
         <div class="options">
           <label
-            ><input type="radio" name="sour" value="0" /><span>0</span></label
+            ><input type="radio" name="azedo" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="sour" value="1" /><span>1</span></label
+            ><input type="radio" name="azedo" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="sour" value="2" /><span>2</span></label
+            ><input type="radio" name="azedo" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="sour" value="3" /><span>3</span></label
+            ><input type="radio" name="azedo" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="sour" value="4" /><span>4</span></label
+            ><input type="radio" name="azedo" value="4" /><span>4</span></label
           >
         </div>
       </div>
+
       <div class="descriptor" style="margin: 20px">
         <span>Baunilha</span>
         <div class="options">
           <label
-            ><input type="radio" name="vanilla" value="0" /><span
+            ><input type="radio" name="baunilha" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="vanilla" value="1" /><span
+            ><input type="radio" name="baunilha" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="vanilla" value="2" /><span
+            ><input type="radio" name="baunilha" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="vanilla" value="3" /><span
+            ><input type="radio" name="baunilha" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="vanilla" value="4" /><span
+            ><input type="radio" name="baunilha" value="4" /><span
               >4</span
             ></label
           >
@@ -474,19 +488,19 @@
         <span>Borracha</span>
         <div class="options">
           <label
-            ><input type="radio" name="rubber" value="0" /><span>0</span></label
+            ><input type="radio" name="borracha" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="rubber" value="1" /><span>1</span></label
+            ><input type="radio" name="borracha" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="rubber" value="2" /><span>2</span></label
+            ><input type="radio" name="borracha" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="rubber" value="3" /><span>3</span></label
+            ><input type="radio" name="borracha" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="rubber" value="4" /><span>4</span></label
+            ><input type="radio" name="borracha" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -495,27 +509,27 @@
         <span>Caramelizado/Caramelo/Doce</span>
         <div class="options">
           <label
-            ><input type="radio" name="caramelized" value="0" /><span
+            ><input type="radio" name="caramelizado" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="caramelized" value="1" /><span
+            ><input type="radio" name="caramelizado" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="caramelized" value="2" /><span
+            ><input type="radio" name="caramelizado" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="caramelized" value="3" /><span
+            ><input type="radio" name="caramelizado" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="caramelized" value="4" /><span
+            ><input type="radio" name="caramelizado" value="4" /><span
               >4</span
             ></label
           >
@@ -573,23 +587,24 @@
           >
         </div>
       </div>
+
       <div class="descriptor" style="margin: 20px">
         <span>Cozido/Assado</span>
         <div class="options">
           <label
-            ><input type="radio" name="baked" value="0" /><span>0</span></label
+            ><input type="radio" name="cozido" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="baked" value="1" /><span>1</span></label
+            ><input type="radio" name="cozido" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="baked" value="2" /><span>2</span></label
+            ><input type="radio" name="cozido" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="baked" value="3" /><span>3</span></label
+            ><input type="radio" name="cozido" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="baked" value="4" /><span>4</span></label
+            ><input type="radio" name="cozido" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -598,19 +613,19 @@
         <span>Especiarias</span>
         <div class="options">
           <label
-            ><input type="radio" name="spices" value="0" /><span>0</span></label
+            ><input type="radio" name="especiarias" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="spices" value="1" /><span>1</span></label
+            ><input type="radio" name="especiarias" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="spices" value="2" /><span>2</span></label
+            ><input type="radio" name="especiarias" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="spices" value="3" /><span>3</span></label
+            ><input type="radio" name="especiarias" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="spices" value="4" /><span>4</span></label
+            ><input type="radio" name="especiarias" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -619,27 +634,27 @@
         <span>Fermentado</span>
         <div class="options">
           <label
-            ><input type="radio" name="fermented" value="0" /><span
+            ><input type="radio" name="fermentado" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="fermented" value="1" /><span
+            ><input type="radio" name="fermentado" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="fermented" value="2" /><span
+            ><input type="radio" name="fermentado" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="fermented" value="3" /><span
+            ><input type="radio" name="fermentado" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="fermented" value="4" /><span
+            ><input type="radio" name="fermentado" value="4" /><span
               >4</span
             ></label
           >
@@ -671,19 +686,19 @@
         <span>Frutado</span>
         <div class="options">
           <label
-            ><input type="radio" name="fruity" value="0" /><span>0</span></label
+            ><input type="radio" name="frutado" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="fruity" value="1" /><span>1</span></label
+            ><input type="radio" name="frutado" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="fruity" value="2" /><span>2</span></label
+            ><input type="radio" name="frutado" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="fruity" value="3" /><span>3</span></label
+            ><input type="radio" name="frutado" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="fruity" value="4" /><span>4</span></label
+            ><input type="radio" name="frutado" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -692,27 +707,27 @@
         <span>Iodofórmio/Químico</span>
         <div class="options">
           <label
-            ><input type="radio" name="chemical" value="0" /><span
+            ><input type="radio" name="iodoformio_quimico" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="chemical" value="1" /><span
+            ><input type="radio" name="iodoformio_quimico" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="chemical" value="2" /><span
+            ><input type="radio" name="iodoformio_quimico" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="chemical" value="3" /><span
+            ><input type="radio" name="iodoformio_quimico" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="chemical" value="4" /><span
+            ><input type="radio" name="iodoformio_quimico" value="4" /><span
               >4</span
             ></label
           >
@@ -723,27 +738,27 @@
         <span>Madeira/Papelão</span>
         <div class="options">
           <label
-            ><input type="radio" name="woody_cardboard" value="0" /><span
+            ><input type="radio" name="madeira_papelao" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="woody_cardboard" value="1" /><span
+            ><input type="radio" name="madeira_papelao" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="woody_cardboard" value="2" /><span
+            ><input type="radio" name="madeira_papelao" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="woody_cardboard" value="3" /><span
+            ><input type="radio" name="madeira_papelao" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="woody_cardboard" value="4" /><span
+            ><input type="radio" name="madeira_papelao" value="4" /><span
               >4</span
             ></label
           >
@@ -754,19 +769,19 @@
         <span>Mel</span>
         <div class="options">
           <label
-            ><input type="radio" name="honey" value="0" /><span>0</span></label
+            ><input type="radio" name="mel" value="0" /><span>0</span></label
           >
           <label
-            ><input type="radio" name="honey" value="1" /><span>1</span></label
+            ><input type="radio" name="mel" value="1" /><span>1</span></label
           >
           <label
-            ><input type="radio" name="honey" value="2" /><span>2</span></label
+            ><input type="radio" name="mel" value="2" /><span>2</span></label
           >
           <label
-            ><input type="radio" name="honey" value="3" /><span>3</span></label
+            ><input type="radio" name="mel" value="3" /><span>3</span></label
           >
           <label
-            ><input type="radio" name="honey" value="4" /><span>4</span></label
+            ><input type="radio" name="mel" value="4" /><span>4</span></label
           >
         </div>
       </div>
@@ -775,27 +790,27 @@
         <span>Queimado/Defumado</span>
         <div class="options">
           <label
-            ><input type="radio" name="burnt_smoked" value="0" /><span
+            ><input type="radio" name="queimado_defumado" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="burnt_smoked" value="1" /><span
+            ><input type="radio" name="queimado_defumado" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="burnt_smoked" value="2" /><span
+            ><input type="radio" name="queimado_defumado" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="burnt_smoked" value="3" /><span
+            ><input type="radio" name="queimado_defumado" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="burnt_smoked" value="4" /><span
+            ><input type="radio" name="queimado_defumado" value="4" /><span
               >4</span
             ></label
           >
@@ -806,27 +821,27 @@
         <span>Terroso/Mofo</span>
         <div class="options">
           <label
-            ><input type="radio" name="earthy_moldy" value="0" /><span
+            ><input type="radio" name="terroso_mofo" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="earthy_moldy" value="1" /><span
+            ><input type="radio" name="terroso_mofo" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="earthy_moldy" value="2" /><span
+            ><input type="radio" name="terroso_mofo" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="earthy_moldy" value="3" /><span
+            ><input type="radio" name="terroso_mofo" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="earthy_moldy" value="4" /><span
+            ><input type="radio" name="terroso_mofo" value="4" /><span
               >4</span
             ></label
           >
@@ -837,27 +852,27 @@
         <span>Tostado</span>
         <div class="options">
           <label
-            ><input type="radio" name="toasted" value="0" /><span
+            ><input type="radio" name="tostado" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="toasted" value="1" /><span
+            ><input type="radio" name="tostado" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="toasted" value="2" /><span
+            ><input type="radio" name="tostado" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="toasted" value="3" /><span
+            ><input type="radio" name="tostado" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="toasted" value="4" /><span
+            ><input type="radio" name="tostado" value="4" /><span
               >4</span
             ></label
           >
@@ -898,27 +913,27 @@
         <span>Envelhecido/Oxidado</span>
         <div class="options">
           <label
-            ><input type="radio" name="aged_oxidized" value="0" /><span
+            ><input type="radio" name="envelhecido_oxidado" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="aged_oxidized" value="1" /><span
+            ><input type="radio" name="envelhecido_oxidado" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="aged_oxidized" value="2" /><span
+            ><input type="radio" name="envelhecido_oxidado" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="aged_oxidized" value="3" /><span
+            ><input type="radio" name="envelhecido_oxidado" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="aged_oxidized" value="4" /><span
+            ><input type="radio" name="envelhecido_oxidado" value="4" /><span
               >4</span
             ></label
           >
@@ -929,27 +944,27 @@
         <span>Verde/Herbáceo</span>
         <div class="options">
           <label
-            ><input type="radio" name="green_herbal" value="0" /><span
+            ><input type="radio" name="verde_herbaceo" value="0" /><span
               >0</span
             ></label
           >
           <label
-            ><input type="radio" name="green_herbal" value="1" /><span
+            ><input type="radio" name="verde_herbaceo" value="1" /><span
               >1</span
             ></label
           >
           <label
-            ><input type="radio" name="green_herbal" value="2" /><span
+            ><input type="radio" name="verde_herbaceo" value="2" /><span
               >2</span
             ></label
           >
           <label
-            ><input type="radio" name="green_herbal" value="3" /><span
+            ><input type="radio" name="verde_herbaceo" value="3" /><span
               >3</span
             ></label
           >
           <label
-            ><input type="radio" name="green_herbal" value="4" /><span
+            ><input type="radio" name="verde_herbaceo" value="4" /><span
               >4</span
             ></label
           >
@@ -973,9 +988,13 @@
             id="valorDocura"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1018,9 +1037,13 @@
             id="valorCorpo"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1063,9 +1086,13 @@
             id="valorAcidez"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1108,9 +1135,13 @@
             id="valorAcidezqualidade"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1153,9 +1184,13 @@
             id="valorAmargor"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1198,9 +1233,13 @@
             id="valorAdstringencia"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1243,9 +1282,13 @@
             id="valorDefeitos"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1288,9 +1331,13 @@
             id="valorSaborresidual"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >
@@ -1333,9 +1380,13 @@
             id="valorIntensidade"
             style="
               width: 50px;
-              text-align: right;
+              text-align: center;
               font-weight: 700;
-              color: #008004;
+              color: #fff;
+              background: linear-gradient(135deg, #120a07 10%, #d1a67d 100%);
+              border: 1px solid #fff;
+              border-radius: 5px;
+              padding-top: 2px;
             "
             >5</span
           >

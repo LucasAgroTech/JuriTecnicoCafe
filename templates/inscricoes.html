@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inscrições de {{ nome_especialista }}</title>
+  </head>
+  <body>
+    <h1>Inscrições de {{ nome_especialista }}</h1>
+    {% if inscricoes %}
+    <ul>
+      {% for inscricao in inscricoes %}
+      <li>
+        Código do Café: {{ inscricao.codigo_cafe }} - Fragrância: {{
+        inscricao.fragrancia }} - Aroma: {{ inscricao.aroma }}
+        <!-- Adicione mais campos conforme necessário -->
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>Nenhuma inscrição encontrada.</p>
+    {% endif %}
+    <a href="{{ url_for('home') }}">Voltar</a>
+  </body>
+</html>
